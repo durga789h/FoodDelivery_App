@@ -4,8 +4,10 @@ import { ToastContainer,toast } from 'react-toastify';
 //import CustomerHeader from './CustomerHeader'
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
-export default function UserSignup() {
+export default function UserSignup(props) {
+  const router=useRouter()
 
   const initialState = {
     name: "",
@@ -86,6 +88,13 @@ export default function UserSignup() {
             
         toast.success("Signup successful!");
         sessionStorage.setItem("user", JSON.stringify(response.data.savedUser));
+        if(props.redirect?.order){
+          router.push("/order")
+        }
+        else{
+          router.push("/");
+        }
+       
       } 
       else if (response.status === 400) {
         toast.error("There was a problem with your request. Please try again.");

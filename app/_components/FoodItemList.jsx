@@ -1,7 +1,7 @@
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import image from "../../../grocery-store/public/images_1_9afed7af04.jpg"
+
 import React, { useEffect, useState } from "react"; 
 import { useRouter } from 'next/navigation';
 const FoodItemList = () => {
@@ -65,7 +65,7 @@ const FoodItemList = () => {
                         <tr>
                             <th className="border p-3">S.no</th>
                             <th className="border p-3">Name</th>
-                            <th className="border p-3">Price</th>
+                            <th className="border p-3">&#8377;Price</th>
                             <th className="border p-3">Description</th>
                             <th className="border p-3">Image</th>
                            
@@ -77,7 +77,7 @@ const FoodItemList = () => {
                             <tr key={item._id}>
                                 <td className="border p-3">{index + 1}</td>
                                 <td className="border p-3">{item.name}</td>
-                                <td className="border p-3">{item.price}</td>
+                                <td className="border p-3">&#8377;{item.price}</td>
                                 <td className="border p-3">{item.description}</td>
                                 <td className="border p-3">
                                     <img src={item.path} alt={item.name} width="50" height="50" />

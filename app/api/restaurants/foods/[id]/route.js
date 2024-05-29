@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { connectionStr } from "../../login/route";
 import mongoose from "mongoose";
 
+
 export async function GET(request,content){
 
     try {
@@ -41,6 +42,4 @@ export async function DELETE(request,content){
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
-
-
 

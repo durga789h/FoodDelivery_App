@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function  UserLogin() {
+function  UserLogin(props) {
   const initialState = {
     email: "",
     password: "",
@@ -53,10 +53,23 @@ function  UserLogin() {
       if (response.ok) {
         toast.success("Login successful");
         setUser(initialState);
-        sessionStorage.setItem("customername", JSON.stringify(responseData.data.username));
-        sessionStorage.setItem("customerid", JSON.stringify(responseData.data.id));
-        sessionStorage.setItem("jwt", responseData.token);
+        sessionStorage.setItem("user", JSON.stringify(responseData.data));
+
+        //for case on delivery system
+      if(props.redirect?.order){
+        Router.push("/order")
+      }
+      else{
         Router.push("/");
+      }
+      //for online payment system
+      if(props.redirect?.cart){
+        Router.push("/cart")
+      }
+      else{
+        Router.push("/");
+      }
+        
       } else {
         if (response.status === 400 && responseData.error === "User does not exist") {
           toast.error("User does not exist");

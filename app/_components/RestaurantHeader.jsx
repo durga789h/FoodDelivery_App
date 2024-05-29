@@ -42,9 +42,7 @@ function RestaurantHeader() {
         <li>
             <Link href={"/"}  >Profile</Link>
         </li>
-        <li>
-        <Link href={"/restaurant/dashboard"}  >Dashboard</Link>
-          </li> </>
+      </>
         :<li>
             <Link href={"/restaurant"} >Login/Signup</Link>
             

@@ -2,7 +2,7 @@
 import React,{useState} from 'react'
 import RestaurantLogin from '../_components/restaurantLogin'
 import RestaurantSignUp from '../_components/restaurantSignUp'
-import RestaurantHeader from '../_components/RestaurantHeader';
+//import RestaurantHeader from '../_components/RestaurantHeader';
 import RestaurantFooter from '../_components/RestaurantFooter';
 
 

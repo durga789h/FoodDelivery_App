@@ -48,7 +48,7 @@ function RestaurantLogin() {
       });
 
       const responseData = await response.json();
-      
+      console.log(responseData)
       if (response.ok) {
         toast.success("Login successful");
         setUser(initialState);

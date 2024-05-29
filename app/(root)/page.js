@@ -1,6 +1,7 @@
 "use client"
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import CustomerHeader from '../_components/CustomerHeader';
 
 const banners = {
   backgroundImage: "url('https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L2stcGYtcG9tLTEyNDIuanBn.jpg')",
@@ -75,6 +76,7 @@ export default function Home() {
 
   return (
     <div>
+      <CustomerHeader/>
       <div style={banners}>
         <div className='outline-none gap-5 p-7 mt-[-90px]'>
           <h1 className='text-center text-red-800 text-2xl mb-5'>Food Delivery App</h1>

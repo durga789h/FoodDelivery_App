@@ -1,5 +1,5 @@
 
-import { restaurantSchema } from "@/app/lib/database/models/restaurants-model";
+import { restaurantSchema } from "../../../lib/database/models/restaurants-model";
 import mongoose from "mongoose";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken"

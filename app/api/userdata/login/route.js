@@ -16,6 +16,8 @@ import { NextRequest, NextResponse } from "next/server";
         //check if user exists
         const user = await userSchema.findOne({email})
 
+        //const user2=await userSchema.findOne({address})
+
         if(!user){
             return NextResponse.json({error: "User does not exist"}, {status: 400})
         }
@@ -34,8 +36,11 @@ import { NextRequest, NextResponse } from "next/server";
 
         const tokenData = {
             id: user._id,
-            username: user.name,
-            email: user.email
+            name: user.name,
+            email: user.email,
+            address:user.address,
+            mobile:user.mobile,
+            city:user.city,
         }
 
         // Create a token with expiration of 1 day
