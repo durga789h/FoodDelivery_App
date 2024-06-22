@@ -14,6 +14,8 @@ import Style from 'ol/style/Style';
 import Text from 'ol/style/Text';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
+import Link from 'next/link';
+
 
 const deliveryPoints = [
   { id: 1, lon: 85.1376, lat: 25.5941, name: 'Patna' },
@@ -77,8 +79,16 @@ const OpenLayersMap = () => {
   }, []);
 
   return<>
+ <div>
+  
+  <button className='bg-gradient-to-br from-fuchsia-700 to-blue-700 p-3 rounded-full mr-2 mb-5 mt-3 text-white'>
+    <Link rel="stylesheet" href="/" >Go-Home </Link></button>
+  
+  <button className='bg-gradient-to-br from-fuchsia-700 text-white to-blue-700 p-3
+   rounded-full mr-2'><Link href="/deliverydashboard">Go back</Link></button>
   <h1 className='text-center text-xl text-fuchsia-600'>Delivery points</h1>
    <div ref={mapContainerRef} style={{ height: '400px', width: '100%' }}></div>;
+   </div>
   </>
 };
 

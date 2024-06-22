@@ -15,6 +15,7 @@ import { deliveryschema } from "../../../lib/database/models/deliverypartners-mo
 
         //check if user exists
         const user = await deliveryschema.findOne({mobile})
+        console.log(user)
 
         if(!user){
             return NextResponse.json({error: "User does not exist"}, {status: 400})
@@ -61,3 +62,4 @@ import { deliveryschema } from "../../../lib/database/models/deliverypartners-mo
 
     }
 }
+

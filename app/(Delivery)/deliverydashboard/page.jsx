@@ -20,6 +20,7 @@ export default function Page() {
     if (!delivery) {
       router.push("deliverypartner");
     } else {
+      //const deliveryId = delivery.data.id;
       const deliveryId = delivery.data.id;
       console.log("Delivery ID:", deliveryId);
       fetchCashOnDeliveryOrders(deliveryId);

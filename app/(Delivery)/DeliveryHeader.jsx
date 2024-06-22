@@ -14,7 +14,7 @@ const handleout=()=>{
   sessionStorage.removeItem("delivery")
   router.push("/")
 }
-
+console.log(delivery)
   return (
     <div className='flex gap-44'>
       <div>
@@ -26,13 +26,15 @@ const handleout=()=>{
       
         </li>
 {
-  delivery?<li>
-  <Link href={"/geolocation"}>DeliveryLocation</Link>
-</li>:""
+  delivery?  <li onClick={handleout} className='cursor-pointer'>
+  logout({delivery.data.username})
+ </li>
+  
+ :""
 }
-        <li onClick={handleout} className='cursor-pointer'>
-         logout
-        </li>
+<li>
+  <Link href={"/geolocation"}>DeliveryLocation</Link>
+</li>
       </ul>
     </div>
   );

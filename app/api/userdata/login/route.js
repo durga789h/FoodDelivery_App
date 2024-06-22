@@ -1,4 +1,4 @@
-
+//api/userdata/login/route.js
 import mongoose from "mongoose";
 import bcryptjs from 'bcryptjs';
 import jwt from "jsonwebtoken"
@@ -25,6 +25,9 @@ import { NextRequest, NextResponse } from "next/server";
         //check if password is correct
         const validPassword = await bcryptjs.compare
         (password, user.password)
+        console.log(validPassword)
+        console.log(password);
+        console.log(user.password);
         if(!validPassword){
             return NextResponse.json({error: "Invalid password"}, {status: 400})
         }
@@ -41,6 +44,7 @@ import { NextRequest, NextResponse } from "next/server";
             address:user.address,
             mobile:user.mobile,
             city:user.city,
+            role:user.role
         }
 
         // Create a token with expiration of 1 day

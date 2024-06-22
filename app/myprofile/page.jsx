@@ -19,7 +19,7 @@ function Page() {
       setMyOrders(response.result);
     }
   }
-
+console.log(myOrders)
   return (
     <div>
       <CustomerHeader />

@@ -4,6 +4,7 @@ import RestaurantLogin from '../_components/restaurantLogin'
 import RestaurantSignUp from '../_components/restaurantSignUp'
 //import RestaurantHeader from '../_components/RestaurantHeader';
 import RestaurantFooter from '../_components/RestaurantFooter';
+import Link from 'next/link';
 
 
 function Restaurant() {
@@ -16,6 +17,7 @@ function Restaurant() {
       <div className='flex flex-col items-center justify-center bg-slate-200 border border-gray-200 p-3'>
      
       <h1 className='text-fuchsia-500 text-3xl text-center'>Restaurant Login/Signup page</h1>
+      <Link rel="stylesheet" href="/" className='bg-gradient-to-br text-white mt-2 from-fuchsia-700 to-blue-600 p-3 rounded-lg'  >Home</Link>
       {
         login?<RestaurantLogin/>:<RestaurantSignUp/>
       }

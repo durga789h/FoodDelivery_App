@@ -22,7 +22,7 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [showLocation, setShowLocation] = useState(false);
   
-  const router=useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     loadLocations();
@@ -36,16 +36,13 @@ export default function Home() {
       setLocations(data.result);
     }
   };
- 
 
   const loadRestaurants = async (params) => {
-    let url="http://localhost:3000/api/customer"
-    if(params?.location){
-
-        url=url+"?location="+params.location
-    }else if(params?.restaurant){
-      url=url+"?restaurant="+params.restaurant
-
+    let url = "http://localhost:3000/api/customer";
+    if (params?.location) {
+      url = url + "?location=" + params.location;
+    } else if (params?.restaurant) {
+      url = url + "?restaurant=" + params.restaurant;
     }
     let response = await fetch(url);
     const data = await response.json();
@@ -57,7 +54,7 @@ export default function Home() {
   const handleListItem = (item) => {
     setSelectedLocation(item);
     setShowLocation(false); // for close
-    loadRestaurants({location:item})
+    loadRestaurants({ location: item });
   };
 
   const splitAddress = (address) => {
@@ -76,53 +73,63 @@ export default function Home() {
 
   return (
     <div>
-      <CustomerHeader/>
-      <div style={banners}>
-        <div className='outline-none gap-5 p-7 mt-[-90px]'>
-          <h1 className='text-center text-red-800 text-2xl mb-5'>Food Delivery App</h1>
-          <input type="text" value={selectedLocation} 
-          
-           onClick={() => setShowLocation(true)} placeholder="Select place" className='p-3 outline-none' />
-          <input type="text"
-          onChange={(e)=>loadRestaurants({restaurant:e.target.value})}
-          placeholder="Enter food or restaurant name" className='p-3 outline-none pr-80' />
-          <ul className='bg-white w-1/4 p-0 cursor-pointer'>
-            {showLocation &&
-              locations.map((item, i) => (
-                <li key={i} className='border' onClick={() => handleListItem(item)}>{item}</li>
-              ))
-            }
-          </ul>
+      <CustomerHeader />
+      <div style={banners} className="flex flex-col items-center justify-center">
+        <div className="outline-none gap-5 p-7 mt-[-90px] text-center">
+          <h1 className="text-red-800 text-2xl mb-5">Food Delivery App</h1>
+          <input 
+            type="text" 
+            value={selectedLocation} 
+            onChange={handleListItem}
+            onClick={() => setShowLocation(true)} 
+            placeholder="Select place" 
+            className="p-3 outline-none w-full max-w-md mb-3" 
+          />
+          <input 
+            type="text"
+            onChange={(e) => loadRestaurants({ restaurant: e.target.value })}
+            placeholder="Enter food or restaurant name" 
+            className="p-3 outline-none w-full max-w-md mb-3" 
+          />
+          {showLocation && (
+            <ul className="bg-white w-full max-w-md p-0 cursor-pointer border">
+              {locations.map((item, i) => (
+                <li key={i} className="border-b p-2 hover:bg-gray-200" onClick={() => handleListItem(item)}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
-      <div className=' p-4 flex gap-3 flex-wrap font-bold justify-center'>
-        {
-          restaurants.map((item, index) => {
-            const { firstChunk, remainingChunks } = splitAddress(item.address);
-            return (
-              <div onClick={()=>router.push("explore/"+item.name +"?id="+item._id)} key={index}
-               className=' bg-blue-400 p-4 mb-4 rounded cursor-pointer'>
-                <div className='flex flex-col text-white'>
-                  <h1 className='text-xl text-emerald-900'>Restaurant name:-{item.name}</h1>
-                  <h2 className='text-yellow-800 mt-3'>Phone:-{item.phone}</h2>
-                  <h2 className='text-yellow-800'>Email:-{item.email}</h2>
-                </div>
-                <div className='flex flex-col text-white'>
-                  <h2 className='text-yellow-800'>Address:-{firstChunk}</h2>
-                  {remainingChunks.length > 0 && (
-                    <div>
-                      {remainingChunks.map((chunk, chunkIndex) => (
-                        <h2  className="text-yellow-800"  key={chunkIndex}>{chunk}</h2>
-                      ))}
-                    </div>
-                  )}
-                </div>
+      <div className="p-4 flex flex-wrap gap-3 justify-center">
+        {restaurants.map((item, index) => {
+          const { firstChunk, remainingChunks } = splitAddress(item.address);
+          return (
+            <div 
+              onClick={() => router.push("explore/" + item.name + "?id=" + item._id)} 
+              key={index}
+              className="bg-gradient-to-bl from-green-700 to-white p-4 mb-4 rounded cursor-pointer w-full max-w-sm"
+            >
+              <div className="flex flex-col text-white">
+                <h1 className="text-xl text-red-800">Restaurant name: {item.name}</h1>
+                <h2 className="text-pink-800 mt-3">Phone: {item.phone}</h2>
+                <h2 className="text-fuchsia-950">Email: {item.email}</h2>
               </div>
-            );
-          })
-        }
+              <div className="flex flex-col text-white">
+                <h2 className="text-red-950">Address: {firstChunk}</h2>
+                {remainingChunks.length > 0 && (
+                  <div>
+                    {remainingChunks.map((chunk, chunkIndex) => (
+                      <h2 className="text-yellow-800" key={chunkIndex}>{chunk}</h2>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
-     
     </div>
   );
 }

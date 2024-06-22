@@ -17,6 +17,7 @@ export default function UserSignup(props) {
     address: "",
     city: "",
    mobile:"",
+   isAdmin:false,
   };
 
   const [user, setUser] = useState(initialState);

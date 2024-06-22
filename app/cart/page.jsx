@@ -22,9 +22,14 @@ const rowStyle1 = {
 
 function Page() {
   const router = useRouter();
-  const [userstorage, setUserStorage] = useState(() => JSON.parse(sessionStorage.getItem("user")));
-  let city = JSON.parse(sessionStorage.getItem("user")).city;
-  const [cartStorage, setCartStorage] = useState(() => JSON.parse(sessionStorage.getItem("cart")) || []);
+  const [userstorage, setUserStorage] = useState(() => {
+    const user = sessionStorage.getItem("user");
+    return user ? JSON.parse(user) : null;
+  });
+  const [cartStorage, setCartStorage] = useState(() => {
+    const cart = sessionStorage.getItem("cart");
+    return cart ? JSON.parse(cart) : [];
+  });
   const [paymentMode, setPaymentMode] = useState("cash on delivery");
   const [removeCartData, setRemoveCartData] = useState(false); // Define the state for removeCartData
 
@@ -118,14 +123,15 @@ function Page() {
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
           };
-
-          const result = await fetch('/api/verify', {
+ //console.log(data)
+          const result = await fetch('/api/verify-razorpay', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data),
           });
 
           const res = await result.json();
+          console.log(res)
           if (res.isOk) {
             toast.success(res.message);
             await placeOrder(orderId);  // Pass the orderId to placeOrder function
@@ -171,12 +177,12 @@ function Page() {
     let cart = cartStorage;
     let deliveryBoyResponse = await fetch(`http://localhost:3000/api/deliverypartners/${city}`);
     deliveryBoyResponse = await deliveryBoyResponse.json();
-    console.log(deliveryBoyResponse);
+   // console.log(deliveryBoyResponse);
 
     let deliveryBoyIds = deliveryBoyResponse.result.map((item) => item._id);
-    console.log(deliveryBoyIds);
+   // console.log(deliveryBoyIds);
     let deliveryBoy_id = deliveryBoyIds[Math.floor(Math.random() * deliveryBoyIds.length)];
-    console.log(deliveryBoy_id);
+   // console.log(deliveryBoy_id);
 
     if (!deliveryBoy_id) {
       toast.error("Delivery partner not available");
@@ -223,77 +229,88 @@ function Page() {
     }
   };
 
+  if (!userstorage) {
+    return null; // or a loading spinner, or redirect, etc.
+  }
+
+  const city = userstorage.city;
+
   return (
     <div>
-      <CustomerHeader removeCartData={removeCartData} />
-      <ToastContainer />
-      <div className="p-4 md:p-8 lg:p-12 mb-3">
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cartStorage.length > 0 ? 
-            cartStorage.map((item, i) => (
-              <div key={i} className="p-4 border rounded-lg shadow-lg text-center">
-                <img src={item.path} alt={item.name} className="w-full h-auto mt-2 rounded-md" />
-                <h2 className="text-xl font-semibold">{item.name}</h2>
-                <h3 className="text-lg">₹{item.price}</h3>
-                <p className="mt-2">{item.description}</p>
-                <p className='mt-3'>
-                  <button 
-                    onClick={() => removeFromCart(item._id)}
-                    className='bg-gradient-to-br from-purple-600 to-blue-700 p-3 rounded-full text-white'
-                  >
-                    Remove from cart
-                  </button>
-                </p>
+      {userstorage && (
+        <>
+          <CustomerHeader removeCartData={removeCartData} />
+          <ToastContainer />
+          <div className="p-4 md:p-8 lg:p-12 mb-3">
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {cartStorage.length > 0 ? 
+                cartStorage.map((item, i) => (
+                  <div key={i} className="p-4 border rounded-lg shadow-lg text-center">
+                    <img src={item.path} alt={item.name} className="w-full h-auto mt-2 rounded-md" />
+                    <h2 className="text-xl font-semibold">{item.name}</h2>
+                    <h3 className="text-lg">₹{item.price}</h3>
+                    <p className="mt-2">{item.description}</p>
+                    <p className='mt-3'>
+                      <button 
+                        onClick={() => removeFromCart(item._id)}
+                        className='bg-gradient-to-br from-purple-600 to-blue-700 p-3 rounded-full text-white'
+                      >
+                        Remove from cart
+                      </button>
+                    </p>
+                  </div>
+                )) : 
+                <h1>No food item found</h1>
+              }
+            </div>
+          </div>
+          <div className='flex flex-col border p-3 shadow-lg'>
+            <div>
+              <div style={rowStyle}>
+                <span>Food charges:</span>
+                <span>&#8377;{total}</span>
               </div>
-            )) : 
-            <h1>No food item found</h1>
-          }
-        </div>
-      </div>
-      <div className='flex flex-col border p-3 shadow-lg'>
-        <div>
-          <div style={rowStyle}>
-            <span>Food charges:</span>
-            <span>&#8377;{total}</span>
+              <div style={rowStyle}>
+                <span>Tax:</span>
+                <span>&#8377;{(total * TAX).toFixed(2)}</span>
+              </div>
+              <div style={rowStyle}>
+                <span>Delivery charges:</span>
+                <span>&#8377;{DELIVERY_CHARGES}</span>
+              </div>
+              <div style={rowStyle}>
+                <span>Total Price:</span>
+                <span>&#8377;{totalPrice.toFixed(2)}</span>
+              </div>
+            </div>
+            <div>
+              <select size="1" className='w-[200px] p-3 px-3 
+              rounded-lg bg-gradient-to-br from-blue-700 to-fuchsia-700 text-white' onChange={handlePaymentModeChange} value={paymentMode}>
+                <optgroup label="payment-mode">
+                  <option value="online" className='bg-white text-black hover:bg-gradient-to-br hover:from-blue-700 hover:to-fuchsia-700 hover:text-white'>Online</option>
+                  <option value="cash on delivery" className='bg-white text-black hover:bg-gradient-to-br hover:from-blue-700 hover:to-fuchsia-700 hover:text-white'>Cash on Delivery</option>
+                </optgroup>
+              </select>
+            </div>
+            <div style={rowStyle1}>
+              {paymentMode === "online" && (
+                <button className='bg-gradient-to-br mt-2 w-1/2 from-purple-600 to-blue-700 p-3 rounded-full text-white' onClick={processPayment}>Pay now</button>
+              )}
+            </div>
+            <div style={rowStyle1}>
+              {paymentMode === "cash on delivery" && (
+                <button 
+                  className='bg-gradient-to-br mt-3 from-purple-600 w-1/2 to-blue-700 p-3 px-2 rounded-full text-white'
+                  onClick={orderNow}
+                >
+                  Order Now
+                </button>
+              )}
+            </div>
           </div>
-          <div style={rowStyle}>
-            <span>Tax:</span>
-            <span>&#8377;{(total * TAX).toFixed(2)}</span>
-          </div>
-          <div style={rowStyle}>
-            <span>Delivery charges:</span>
-            <span>&#8377;{DELIVERY_CHARGES}</span>
-          </div>
-          <div style={rowStyle}>
-            <span>Total Price:</span>
-            <span>&#8377;{totalPrice.toFixed(2)}</span>
-          </div>
-        </div>
-        <div>
-          <select size="1" className='w-[200px] p-3' onChange={handlePaymentModeChange} value={paymentMode}>
-            <optgroup label="payment-mode">
-              <option value="online">Online</option>
-              <option value="cash on delivery">Cash on Delivery</option>
-            </optgroup>
-          </select>
-        </div>
-        <div style={rowStyle1}>
-          {paymentMode === "online" && (
-            <button className='bg-gradient-to-br from-purple-600 to-blue-700 p-3 rounded-full text-white' onClick={processPayment}>Pay now</button>
-          )}
-        </div>
-        <div style={rowStyle1}>
-          {paymentMode === "cash on delivery" && (
-            <button 
-              className='bg-gradient-to-br from-purple-600 to-blue-700 p-3 rounded-full text-white'
-              onClick={orderNow}
-            >
-              Order Now
-            </button>
-          )}
-        </div>
-      </div>
-      <RestaurantFooter />
+          <RestaurantFooter />
+        </>
+      )}
     </div>
   );
 }

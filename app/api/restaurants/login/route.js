@@ -35,7 +35,8 @@ import { restaurantSchema } from "../../../lib/database/models/restaurants-model
         const tokenData = {
             id: user._id,
             username: user.name,
-            email: user.email
+            email: user.email,
+            
         }
 
         // Create a token with expiration of 1 day
