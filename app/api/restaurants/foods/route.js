@@ -1,17 +1,12 @@
+// /app/api/restaurants/foods/route.js
 import { foodschema } from "../../../lib/database/models/food-model";
 import { connectionStr } from "../login/route";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import cloudinary from '../../../cloudinary';
 
-//for editing the foodschema
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js body parsing, we'll handle it manually
-  },
-};
-
-export async function POST(request) {
+// For handling POST Requests
+export const POST = async (request) => {
   await mongoose.connect(connectionStr);
 
   try {
@@ -49,4 +44,4 @@ export async function POST(request) {
     console.error('Error saving food item:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+};
