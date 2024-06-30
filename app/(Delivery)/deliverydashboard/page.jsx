@@ -15,16 +15,17 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    const delivery = JSON.parse(sessionStorage.getItem("delivery"));
-    console.log("Delivery from sessionStorage:", delivery);
-    if (!delivery) {
-      router.push("deliverypartner");
-    } else {
-      //const deliveryId = delivery.data.id;
-      const deliveryId = delivery.data.id;
-      console.log("Delivery ID:", deliveryId);
-      fetchCashOnDeliveryOrders(deliveryId);
-      fetchOnlinePaymentOrders(deliveryId);
+    if (typeof window !== 'undefined') {
+      const delivery = JSON.parse(sessionStorage.getItem("delivery"));
+      console.log("Delivery from sessionStorage:", delivery);
+      if (!delivery) {
+        router.push("deliverypartner");
+      } else {
+        const deliveryId = delivery.data.id;
+        console.log("Delivery ID:", deliveryId);
+        fetchCashOnDeliveryOrders(deliveryId);
+        fetchOnlinePaymentOrders(deliveryId);
+      }
     }
   }, [router]);
 

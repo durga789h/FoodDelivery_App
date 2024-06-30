@@ -1,25 +1,32 @@
-"use client"
-import React, { useEffect, useState } from 'react'
-import CustomerHeader from '../_components/CustomerHeader'
-import RestaurantFooter from '../_components/RestaurantFooter'
+"use client";
+import React, { useEffect, useState } from 'react';
+import CustomerHeader from '../_components/CustomerHeader';
+import RestaurantFooter from '../_components/RestaurantFooter';
 
 function Page() {
   const [myOrders, setMyOrders] = useState([]);
 
   useEffect(() => {
-    getMyOrder();
+    if (typeof window !== 'undefined') {
+      // Client-side-only code
+      getMyOrder();
+    }
   }, []);
 
   const getMyOrder = async () => {
-    const userstorage=JSON.parse(sessionStorage.getItem("user"))
-    console.log(userstorage)
-    let response = await fetch(`http://localhost:3000/api/ordercase?id=${userstorage.id}`);
-    response = await response.json();
-    if (response.success) {
-      setMyOrders(response.result);
+    const userstorage = JSON.parse(sessionStorage.getItem("user"));
+    if (userstorage) {
+      console.log(userstorage);
+      let response = await fetch(`http://localhost:3000/api/ordercase?id=${userstorage.id}`);
+      response = await response.json();
+      if (response.success) {
+        setMyOrders(response.result);
+      }
     }
-  }
-console.log(myOrders)
+  };
+
+  console.log(myOrders);
+
   return (
     <div>
       <CustomerHeader />
@@ -40,7 +47,7 @@ console.log(myOrders)
       </div>
       <RestaurantFooter />
     </div>
-  )
+  );
 }
 
 export default Page;

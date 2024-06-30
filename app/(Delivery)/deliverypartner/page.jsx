@@ -16,7 +16,14 @@ export default function DeliveryPartner() {
 
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(initialState);
+    const [isClient, setIsClient] = useState(false);
     const Router = useRouter();
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setIsClient(true);
+        }
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -194,11 +201,13 @@ export default function DeliveryPartner() {
 
     // Navigate to delivery dashboard when user is registered
     useEffect(() => {
-        const delivery = JSON.parse(sessionStorage.getItem("delivery"));
-        if (delivery) {
-            Router.push("/deliverydashboard");
+        if (isClient) {
+            const delivery = JSON.parse(sessionStorage.getItem("delivery"));
+            if (delivery) {
+                Router.push("/deliverydashboard");
+            }
         }
-    }, []);
+    }, [isClient]);
 
     return (
         <div className="container mx-auto px-4">
